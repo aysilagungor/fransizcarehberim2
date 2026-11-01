@@ -1,0 +1,47 @@
+FRANSIZCA REHBERİM — PARİS V5
+================================
+
+BU SÜRÜM NE YAPAR?
+- V4'ün Paris tasarımı, Gaston görselleri, ayrı sayfaları, 6 A1 dersi ve 3 mini oyunu korunur.
+- Hesap açmadan ders/oyun ilerlemesi bu cihazın tarayıcısında saklanır.
+- Bir Supabase projesi bağlanırsa e-posta/şifre üyeliği, bulut ilerleme kaydı, öğrenci ders talebi ve öğretmen yönetimi aktifleştirilebilir.
+- Yönetici paneli: ders taleplerini inceleme ve durum güncelleme, ürün ekleme/yayınlama/gizleme, duyuru yayınlama/gizleme.
+- Mağazanın çevrimiçi ödeme özelliği yoktur. Ürün bilgi talepleri WhatsApp'a gider.
+- Ders talebi, gerçek zamanlı öğretmen takviminden doğrulanmış rezervasyon DEĞİLDİR. Öğretmen manuel olarak onaylar.
+- A2–C2 ders içeriği, canlı sınıf ve video konferans, ödeme, sipariş takibi ve admin üzerinden yeni ders oluşturma bu sürümde YOKTUR.
+
+KURULUM (canlı sürüm için bir kez gerekir)
+1. Supabase'de yeni bir proje oluştur. Database / SQL Editor bölümünden supabase/schema.sql dosyasının TAMAMINI çalıştır.
+2. Supabase Project Settings > API Keys / Data API ekranından Project URL ve publishable key (ya da legacy anon key) bilgilerini al.
+3. config.js dosyasında supabaseUrl ve supabasePublishableKey alanlarına bu iki bilgiyi yapıştır.
+   ASLA service_role, secret API key, veritabanı şifresi veya özel anahtar koyma.
+4. Supabase Authentication > URL Configuration alanındaki Site URL ve Redirect URLs değerlerine geliştirme/test site adresini ekle (ör. https://...pages.dev/ ve https://...pages.dev/hesap.html).
+5. GitHub'a yeni bir repo açıp bu klasörün İÇİNDEKİ dosyaları köke yükle; Cloudflare Pages'te bu repoyu bağlayıp Framework preset olarak None seç. Build command boş; Output directory / ya da uygun kök dizin.
+6. Alan adı bağlamadan önce Cloudflare Pages'in geçici .pages.dev adresinde Kayıt Ol, Giriş Yap, 1 ders tamamla, çıkış/giriş ve eşitleme akışlarını test et.
+7. Yönetici olacak hesap üzerinden bir kez kayıt ol; e-postayı doğrula. Sonra sadece Supabase SQL Editor'da şu komutu KENDİ e-postanla çalıştır:
+   update public.profiles set role='admin' where id=(select id from auth.users where email='ADMIN_EPOSTAN');
+   Ardından admin.html sayfasına giriş yap. Yetki istemcide değil veritabanı RLS kurallarında uygulanır.
+
+LOKAL DENEME
+- ZIP'i çıkar, index.html dosyasını aç. A1 ve mini oyunlar internet olmadan çalışabilir; Google Fonts ve Supabase CDN için bağlantı gereklidir.
+- Gerçek üyelik, güvenilir şekilde HTTP(S) üzerinde, tercihen Cloudflare Pages'de test edilmelidir; file:// ile auth redirect akışı güvenilir değildir.
+- Supabase ayarı yoksa hesap sayfasında bulutun bağlı olmadığı açıkça belirtilir. Diğer içeriklere erişim devam eder.
+
+TEST EDİLMESİ GEREKENLER
+[ ] Kayıt + doğrulama e-postası + giriş + çıkış
+[ ] A1 dersi tamamla, sayfayı yenile, aynı hesaptan başka cihazda aç
+[ ] İkinci öğrenci hesabının diğer öğrencinin verisini görememesi
+[ ] Admin olmayan kullanıcının admin veri ve tablolarını değiştirememesi
+[ ] Öğrenci ders talebi gönderir; admin talebi onaylar; öğrenci durumunu görür
+[ ] Ürün/duyuru admin tarafından yayınlanır; ana sitede görünür
+[ ] Tüm sayfalar mobilde görünür; WhatsApp ve telefon çalışır
+
+YAYIN GÜVENLİĞİ
+- Web ortamında şifreler Supabase Auth tarafından işlenir; kendi JS dosyalarımız şifre saklamaz.
+- SQL'de her tablo için RLS aktif. Kullanıcılar kendi ilerlemesini ve taleplerini görebilir.
+- Admin rolü sadece SQL Editor üzerinden atanır.
+- Yetki kontrolleri canlı veritabanına bağlanıp gerçek kullanıcılarla test edilmeden kesin olarak doğrulanmış sayılamaz.
+- Gerçek satıştan önce yasal metinler, gizlilik/çerez politikası, mesafeli satış ve iade süreçleri, stok, fiyat, vergi, ödeme sağlayıcısı ve sipariş doğrulama hazırlanmalıdır.
+- Canlı kullanıma başlamadan önce e-posta servisi limitlerini, gizlilik gereksinimlerini ve veri saklama süreçlerini ayrıca değerlendirin.
+
+MEVCUT WEB SİTESİNE DOKUNULMADI: Bu paket ayrı geliştirme sürümüdür.
